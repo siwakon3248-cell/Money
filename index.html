@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เรื่องเงินเรื่องง่าย - คลังความรู้ทางการเงินฉบับเข้าใจง่าย</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Google Font: Prompt & Sarabun for comfortable long-form reading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Prompt', 'sans-serif'],
+                        sans: ['Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-amber-50/40 text-stone-800 font-sans antialiased selection:bg-orange-200 selection:text-orange-950">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white/95 backdrop-blur-md border-b border-amber-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchView('articles')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-700 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform text-xl">
+                        🦕
+                    </div>
+                    <div>
+                        <span class="font-heading font-bold text-xl tracking-tight text-stone-900">เรื่องเงิน<span class="text-orange-600">เรื่องง่าย</span></span>
+                        <span class="hidden sm:inline-block text-xs bg-orange-50 text-amber-800 px-2.5 py-0.5 rounded-full ml-2 font-heading font-medium border border-orange-200">คลังความรู้กับพี่ไดโน 🦖</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="flex space-x-1 sm:space-x-2">
+                    <button onclick="switchView('articles')" id="nav-articles" class="font-heading px-3 sm:px-4 py-2 rounded-xl text-sm font-semibold bg-orange-100 text-orange-800 transition-colors">
+                        <i class="fa-solid fa-newspaper mr-1.5"></i> บทความ (<span id="total-count">0</span>)
+                    </button>
+                    <button onclick="switchView('glossary')" id="nav-glossary" class="font-heading px-3 sm:px-4 py-2 rounded-xl text-sm font-medium text-stone-600 hover:bg-amber-50 transition-colors">
+                        <i class="fa-solid fa-spell-check mr-1.5"></i> คำศัพท์
+                    </button>
+                    <button onclick="switchView('bookmarks')" id="nav-bookmarks" class="font-heading px-3 sm:px-4 py-2 rounded-xl text-sm font-medium text-stone-600 hover:bg-amber-50 transition-colors">
+                        <i class="fa-solid fa-bookmark mr-1.5"></i> บันทึก (<span id="bookmark-count">0</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header & Search Bar -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-stone-900 via-amber-900 to-orange-800 text-white py-12 sm:py-16 px-4">
+        <!-- Decorative Dinosaur Silhouettes -->
+        <div class="absolute -bottom-4 left-4 text-7xl sm:text-8xl opacity-15 select-none pointer-events-none">🦕</div>
+        <div class="absolute top-6 right-8 text-6xl sm:text-7xl opacity-15 select-none pointer-events-none">🦖</div>
+        <div class="absolute bottom-2 right-1/4 text-4xl opacity-15 select-none pointer-events-none">🥚</div>
+
+        <div class="relative max-w-4xl mx-auto text-center space-y-4">
+            <span class="inline-block bg-orange-500/25 border border-orange-300/40 text-amber-100 font-heading text-xs font-semibold px-3.5 py-1 rounded-full">
+                🦕 แหล่งรวมองค์ความรู้ด้านการเงินส่วนบุคคลและการลงทุนกับพี่ไดโน
+            </span>
+            <h1 class="font-heading text-3xl sm:text-5xl font-bold leading-tight">
+                เรื่องเงินเรื่องง่าย เรียนรู้ได้ไม่สูญพันธุ์!
+            </h1>
+            <p class="text-amber-100/90 text-base sm:text-lg max-w-2xl mx-auto">
+                ฟักไข่ความรู้ทางการเงินให้เติบโต ตั้งแต่พื้นฐานการออม การจัดการหนี้ การวางแผนภาษี ประกันภัย ไปจนถึงกลยุทธ์การลงทุนเพื่ออิสรภาพทางการเงิน
+            </p>
+
+            <!-- Search Input -->
+            <div class="max-w-2xl mx-auto pt-4">
+                <div class="relative flex items-center">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 text-amber-700 text-lg"></i>
+                    <input type="text" id="search-input" oninput="filterArticles()" placeholder="ค้นหาหัวข้อที่สนใจ เช่น กองทุนรวม, ลดหย่อนภาษี, ปลดหนี้, เงินเฟ้อ..." class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white text-stone-900 placeholder-stone-400 shadow-lg focus:ring-4 focus:ring-orange-400/50 outline-none text-base">
+                    <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-4 text-stone-400 hover:text-stone-600">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: ARTICLES DIRECTORY                 -->
+        <!-- ========================================== -->
+        <section id="view-articles" class="space-y-8">
+            <!-- Category Filter Pills -->
+            <div class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-hide" id="category-filters">
+                <button onclick="selectCategory('all')" data-cat="all" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-semibold bg-orange-600 text-white shadow-sm transition-all">
+                    🦕 ทั้งหมด
+                </button>
+                <button onclick="selectCategory('budget')" data-cat="budget" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all">
+                    🟢 การจัดการเงิน & งบการเงิน
+                </button>
+                <button onclick="selectCategory('saving')" data-cat="saving" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all">
+                    🟡 การออม & ประกันความเสี่ยง
+                </button>
+                <button onclick="selectCategory('debt')" data-cat="debt" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all">
+                    🔴 การบริหารจัดการหนี้สิน
+                </button>
+                <button onclick="selectCategory('invest')" data-cat="invest" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all">
+                    🔵 การลงทุน & เกษียณ
+                </button>
+                <button onclick="selectCategory('tax')" data-cat="tax" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all">
+                    🟣 ภาษี & กฎหมายการเงิน
+                </button>
+                <button onclick="selectCategory('mindset')" data-cat="mindset" class="cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all">
+                    🟠 จิตวิทยาการเงิน & ภัยไซเบอร์
+                </button>
+            </div>
+
+            <!-- Featured Learning Path Banner -->
+            <div id="featured-banner" class="bg-gradient-to-r from-white to-orange-50/80 rounded-3xl p-6 sm:p-8 border border-amber-200 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 max-w-2xl">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-orange-100 text-orange-800 font-heading text-xs font-bold px-2.5 py-0.5 rounded-md border border-orange-200">🥚 บทความแนะนำสำหรับมือใหม่</span>
+                        <span class="text-xs text-stone-500"><i class="fa-regular fa-clock mr-1"></i>อ่าน 6 นาที</span>
+                    </div>
+                    <h2 class="font-heading text-2xl font-bold text-stone-900">คู่มือวางแผนการเงินส่วนบุคคลฉบับสมบูรณ์ (Roadmap ตั้งแต่ 0 ถึง 100)</h2>
+                    <p class="text-stone-600 text-base leading-relaxed">
+                        ปูพื้นฐานลำดับขั้นของการสร้างความมั่นคงทางการเงิน ควรทำอะไรก่อน-หลัง ตั้งแต่การอุดรอยรั่วรายจ่าย สร้างเงินสำรองฉุกเฉิน ปิดหนี้ดอกเบี้ยสูง ไปจนถึงการสร้างพอร์ตลงทุนระยะยาว
+                    </p>
+                </div>
+                <button onclick="openArticle(1)" class="font-heading shrink-0 bg-gradient-to-r from-orange-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white font-semibold px-6 py-3.5 rounded-xl shadow-md transition-all w-full lg:w-auto text-center">
+                    อ่านบทความนี้เลย 🦖 <i class="fa-solid fa-arrow-right ml-1.5"></i>
+                </button>
+            </div>
+
+            <!-- Articles Grid -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="grid-heading" class="font-heading text-xl font-bold text-stone-900">🦕 บทความความรู้ทั้งหมด</h3>
+                    <span id="showing-count" class="text-sm text-stone-500">แสดง 12 บทความ</span>
+                </div>
+
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Articles injected by JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-amber-200">
+                    <div class="text-5xl mb-3">🦖❓</div>
+                    <h3 class="font-heading text-lg font-bold text-stone-700">พี่ไดโนหาบทความนี้ไม่เจอ</h3>
+                    <p class="text-stone-500 text-sm mt-1">ลองเปลี่ยนคำค้นหา หรือเลือกดูจากหมวดหมู่ทั้งหมด</p>
+                    <button onclick="clearSearch(); selectCategory('all');" class="mt-4 font-heading text-sm bg-orange-100 text-orange-800 font-semibold px-4 py-2 rounded-xl hover:bg-orange-200">
+                        แสดงบทความทั้งหมด
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: FINANCIAL GLOSSARY                 -->
+        <!-- ========================================== -->
+        <section id="view-glossary" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-amber-200 shadow-sm">
+                <h2 class="font-heading text-2xl font-bold text-stone-900 mb-2">🦕 อภิธานศัพท์ทางการเงินและการลงทุน</h2>
+                <p class="text-stone-600 mb-6">รวมคำศัพท์สำคัญที่พบบ่อยในโลกการเงิน อธิบายด้วยภาษาที่เข้าใจง่าย</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="glossary-list">
+                    <!-- Glossary items injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: BOOKMARKED ARTICLES                -->
+        <!-- ========================================== -->
+        <section id="view-bookmarks" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-heading text-2xl font-bold text-stone-900">🥚 บทความที่คุณบันทึกไว้อ่าน</h2>
+            </div>
+            <div id="bookmarks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Bookmarked articles injected by JS -->
+            </div>
+            <div id="empty-bookmarks" class="hidden text-center py-16 bg-white rounded-3xl border border-amber-200">
+                <div class="text-5xl mb-3">🥚</div>
+                <h3 class="font-heading text-lg font-bold text-stone-700">ยังไม่มีบทความที่บันทึกไว้</h3>
+                <p class="text-stone-500 text-sm mt-1">กดปุ่มรูปที่คั่นหนังสือมุมขวาบนของการ์ดบทความเพื่อเก็บไว้อ่านภายหลัง</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Full-Screen / Large Reader Modal -->
+    <div id="reader-modal" class="fixed inset-0 bg-stone-950/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-6">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-amber-200">
+            <!-- Modal Top Bar -->
+            <div class="px-6 py-4 border-b border-amber-200 flex justify-between items-center bg-amber-50/70">
+                <div class="flex items-center space-x-2">
+                    <span id="reader-category" class="font-heading text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-800 border border-orange-200">หมวดหมู่</span>
+                    <span id="reader-time" class="text-xs text-stone-500"><i class="fa-regular fa-clock mr-1"></i>5 นาที</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="reader-bookmark-btn" onclick="toggleCurrentBookmark()" class="px-3 py-1.5 rounded-xl text-sm font-heading font-medium border border-amber-300 hover:bg-amber-100 text-stone-700 transition-colors">
+                        <i class="fa-regular fa-bookmark mr-1"></i> บันทึกไว้อ่าน
+                    </button>
+                    <button onclick="closeReader()" class="w-9 h-9 rounded-xl bg-amber-200/70 hover:bg-amber-300 flex items-center justify-center text-stone-800 transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Article Content (Scrollable) -->
+            <div class="p-6 sm:p-10 overflow-y-auto space-y-6 text-stone-700 text-base sm:text-lg leading-relaxed">
+                <h1 id="reader-title" class="font-heading text-2xl sm:text-4xl font-bold text-stone-900 leading-snug">
+                    หัวข้อบทความ
+                </h1>
+                <p id="reader-subtitle" class="text-stone-600 text-base sm:text-lg border-l-4 border-orange-500 pl-4 italic bg-orange-50/50 py-2 rounded-r-xl">
+                    คำโปรยบทความ
+                </p>
+                <hr class="border-amber-200">
+                <div id="reader-body" class="space-y-5">
+                    <!-- Rich HTML content injected here -->
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 border-t border-amber-200 bg-amber-50/70 flex justify-between items-center">
+                <button onclick="navigateArticle(-1)" class="font-heading text-sm font-semibold text-stone-600 hover:text-orange-700 flex items-center">
+                    <i class="fa-solid fa-chevron-left mr-1.5"></i> บทความก่อนหน้า
+                </button>
+                <button onclick="closeReader()" class="font-heading text-sm bg-amber-900 hover:bg-stone-900 text-white px-5 py-2 rounded-xl">
+                    ปิดหน้าต่างอ่าน
+                </button>
+                <button onclick="navigateArticle(1)" class="font-heading text-sm font-semibold text-stone-600 hover:text-orange-700 flex items-center">
+                    บทความถัดไป <i class="fa-solid fa-chevron-right ml-1.5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Database & Logic -->
+    <script>
+        // --- Comprehensive Financial Articles Database ---
+        const articlesDB = [
+            {
+                id: 1,
+                category: 'budget',
+                catName: 'การจัดการเงิน & งบการเงิน',
+                catColor: 'emerald',
+                readTime: '6 นาที',
+                title: 'คู่มือวางแผนการเงินส่วนบุคคลฉบับสมบูรณ์ (Roadmap 0 ถึง 100)',
+                summary: 'ลำดับขั้นที่ถูกต้องของการสร้างความมั่งคั่ง ควรทำอะไรก่อนหลัง เพื่อไม่ให้การเงินพังทลายเมื่อเกิดวิกฤต',
+                content: `
+                    <p>หลายคนเข้าใจผิดว่าการวางแผนการเงินคือการ "รีบนำเงินไปลงทุน" แต่ในความเป็นจริง การสร้างฐานะทางการเงินเปรียบเสมือนการสร้างตึกสูง หากฐานรากไม่แข็งแรง ตึกก็พร้อมจะถล่มลงมาได้ทุกเมื่อ</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">ขั้นที่ 1: รู้รายรับ-รายจ่าย และสร้างกระแสเงินสดเป็นบวก</h3>
+                    <p>จุดเริ่มต้นคือการทำบัญชีรายรับ-รายจ่าย อย่างน้อย 1-3 เดือน เพื่อให้เห็นพฤติกรรมการใช้เงินที่แท้จริง เป้าหมายคือต้องทำให้ <strong>รายรับ > รายจ่าย</strong> เสมอ</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">ขั้นที่ 2: สร้างเงินสำรองฉุกเฉิน (Emergency Fund)</h3>
+                    <p>สำรองเงินสดไว้ในที่ที่ถอนง่ายและปลอดภัย (เช่น บัญชีออมทรัพย์ดอกเบี้ยสูง หรือกองทุนรวมตลาดเงิน) ให้ได้ <strong>3 ถึง 6 เท่าของรายจ่ายจำเป็นต่อเดือน</strong> เพื่อรองรับเหตุการณ์ไม่คาดฝัน เช่น ตกงาน หรือรายได้ลดลง</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">ขั้นที่ 3: โอนย้ายความเสี่ยงด้วยประกันภัย</h3>
+                    <p>การเจ็บป่วยโรคร้ายแรงหรืออุบัติเหตุอาจทำลายเงินออมทั้งชีวิต การมีประกันสุขภาพและประกันชีวิตที่เหมาะสมตามภาระความรับผิดชอบ จะช่วยปกป้องเงินเก็บของคุณไว้</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">ขั้นที่ 4: จัดการหนี้สินดอกเบี้ยสูง</h3>
+                    <p>หากมีหนี้บัตรเครดิตหรือสินเชื่อส่วนบุคคลที่ดอกเบี้ย 16% - 25% ต่อปี ให้รีบปิดหนี้เหล่านี้ก่อนนำไปลงทุน เพราะไม่มีการลงทุนใดที่การันตีผลตอบแทนชนะดอกเบี้ยหนี้เหล่านี้ได้แน่นอน</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">ขั้นที่ 5: ลงทุนเพื่อเป้าหมายระยะยาวและเกษียณ</h3>
+                    <p>เมื่อฐานรากทั้ง 4 ข้อแข็งแรงแล้ว จึงเริ่มนำเงินออมส่วนเกินไปลงทุนในสินทรัพย์ที่เติบโตชนะเงินเฟ้อ เช่น กองทุนรวม หุ้น หรืออสังหาริมทรัพย์ ตามระดับความเสี่ยงที่ยอมรับได้</p>
+                `
+            },
+            {
+                id: 2,
+                category: 'budget',
+                catName: 'การจัดการเงิน & งบการเงิน',
+                catColor: 'emerald',
+                readTime: '4 นาที',
+                title: 'เจาะลึกสูตรแบ่งเงิน 50/30/20 และ 6 Jars เลือกแบบไหนให้เหมาะกับคุณ?',
+                summary: 'เปรียบเทียบ 2 สูตรบริหารเงินระดับโลก พร้อมวิธีปรับสัดส่วนให้เข้ากับค่าครองชีพและรายได้ในปัจจุบัน',
+                content: `
+                    <p>การแบ่งเงินเป็นสัดส่วนช่วยให้เราใช้จ่ายได้อย่างสบายใจโดยไม่รู้สึกผิด และมั่นใจได้ว่ามีเงินเก็บทุกเดือน</p>
+                    <div class="bg-emerald-50 p-5 rounded-2xl border border-emerald-200 space-y-2">
+                        <h4 class="font-heading font-bold text-emerald-900">1. สูตร 50 / 30 / 20 (เน้นความเรียบง่าย)</h4>
+                        <ul class="list-disc list-inside text-emerald-800 space-y-1">
+                            <li><strong>50% Needs (ค่าใช้จ่ายจำเป็น):</strong> ค่าที่พัก ค่าอาหาร ค่าเดินทาง ค่าน้ำ-ไฟ และยอดผ่อนหนี้ขั้นต่ำ</li>
+                            <li><strong>30% Wants (ค่าใช้จ่ายเพื่อความสุข):</strong> ช้อปปิ้ง ท่องเที่ยว ดูหนัง กินข้าวนอกบ้าน</li>
+                            <li><strong>20% Savings (ออมและลงทุน):</strong> หักเก็บทันทีตั้งแต่วันที่เงินเดือนออก</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-100 p-5 rounded-2xl border border-slate-200 space-y-2">
+                        <h4 class="font-heading font-bold text-slate-900">2. สูตร 6 Jars (แบ่งละเอียด 6 กระปุก)</h4>
+                        <p class="text-sm text-slate-700">เหมาะสำหรับคนที่ต้องการพัฒนาตัวเองและวางแผนระยะยาวอย่างเข้มข้น:</p>
+                        <ul class="list-disc list-inside text-slate-700 space-y-1 text-base">
+                            <li><strong>55% Necessity:</strong> ค่าใช้จ่ายจำเป็นในชีวิตประจำวัน</li>
+                            <li><strong>10% Financial Freedom:</strong> เงินลงทุนเพื่ออิสรภาพทางการเงิน (ห้ามถอนมาใช้เด็ดขาด)</li>
+                            <li><strong>10% Long-term Savings:</strong> เงินออมระยะยาว (ซื้อบ้าน ซื้อรถ สำรองฉุกเฉิน)</li>
+                            <li><strong>10% Education:</strong> ค่าเรียนรู้ ซื้อหนังสือ คอร์สเรียนพัฒนาทักษะ</li>
+                            <li><strong>10% Play:</strong> ใช้จ่ายเพื่อความสุข เติมพลังให้ชีวิต (ต้องใช้ให้หมดเพื่อเป็นรางวัล)</li>
+                            <li><strong>5% Give:</strong> เงินบริจาค ทำบุญ ช่วยเหลือสังคม</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                category: 'budget',
+                catName: 'การจัดการเงิน & งบการเงิน',
+                catColor: 'emerald',
+                readTime: '5 นาที',
+                title: 'งบดุลส่วนบุคคล (Personal Balance Sheet) เช็กความมั่งคั่งสุทธิของคุณ',
+                summary: 'คนรวยไม่ได้วัดกันที่เงินเดือนสูง แต่วัดกันที่ "ความมั่งคั่งสุทธิ (Net Worth)" มาเรียนรู้วิธีทำงบดุลส่วนตัวกัน',
+                content: `
+                    <p>หลายคนมีรายได้เดือนละหลักแสน แต่สิ้นปีกลับไม่มีเงินเหลือเก็บ ในขณะที่บางคนเงินเดือนปานกลางแต่มีทรัพย์สินเพิ่มขึ้นทุกปี ความแตกต่างนี้ดูได้จาก <strong>"งบดุลส่วนบุคคล"</strong></p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">สมการความมั่งคั่งสุทธิ</h3>
+                    <div class="bg-slate-900 text-white p-4 rounded-xl text-center font-heading text-lg font-bold">
+                        ความมั่งคั่งสุทธิ (Net Worth) = ทรัพย์สินทั้งหมด - หนี้สินทั้งหมด
+                    </div>
+                    <p><strong>1. ทรัพย์สิน (Assets):</strong> แบ่งเป็น 3 ประเภท คือ สภาพคล่อง (เงินสด เงินฝาก), สินทรัพย์ลงทุน (หุ้น กองทุน ทองคำ), และสินทรัพย์ส่วนตัว (บ้าน รถยนต์ ที่ดิน ประเมินตามราคาตลาดปัจจุบัน)</p>
+                    <p><strong>2. หนี้สิน (Liabilities):</strong> ยอดเงินต้นคงเหลือทั้งหมดที่คุณติดค้างอยู่ เช่น หนี้บ้าน หนี้รถ หนี้บัตรเครดิต</p>
+                    <p><strong>คำแนะนำ:</strong> ควรทำงบดุลส่วนบุคคลปีละ 1 ครั้ง (เช่น ทุกสิ้นเดือนธันวาคม) เพื่อตรวจสอบว่าความมั่งคั่งสุทธิของคุณเติบโตขึ้นหรือไม่</p>
+                `
+            },
+            {
+                id: 4,
+                category: 'saving',
+                catName: 'การออม & ประกันความเสี่ยง',
+                catColor: 'amber',
+                readTime: '5 นาที',
+                title: 'เงินสำรองฉุกเฉินควรเก็บไว้ที่ไหน? เปรียบเทียบ 4 แหล่งพักเงินสภาพคล่องสูง',
+                summary: 'เงินฉุกเฉินห้ามนำไปเล่นหุ้นหรือซื้อสินทรัพย์เสี่ยง แล้วควรเก็บไว้ที่ไหนให้ปลอดภัย ถอนง่าย และได้ดอกเบี้ยคุ้มค่า?',
+                content: `
+                    <p>คุณสมบัติของที่เก็บเงินสำรองฉุกเฉินต้องมี 3 ข้อ คือ <strong>1. เงินต้นไม่หาย 2. สภาพคล่องสูง (เบิกใช้ได้ใน 1-2 วัน) 3. ผลตอบแทนชนะเงินฝากทั่วไป</strong></p>
+                    <ul class="space-y-3">
+                        <li class="p-4 bg-white border border-amber-200 rounded-xl">
+                            <strong class="text-orange-700 font-heading">1. บัญชีเงินฝากออมทรัพย์ดิจิทัล (e-Savings):</strong> ให้ดอกเบี้ยสูงกว่าออมทรัพย์ปกติ (ประมาณ 1.5% - 2.0% ต่อปี) โอนเข้า-ออกผ่านแอปธนาคารได้ทันที 24 ชั่วโมง เหมาะสำหรับเก็บเงินฉุกเฉินก้อนแรก 1-2 เดือนแรก
+                        </li>
+                        <li class="p-4 bg-white border border-amber-200 rounded-xl">
+                            <strong class="text-orange-700 font-heading">2. กองทุนรวมตลาดเงิน (Money Market Fund):</strong> ลงทุนในพันธบัตรรัฐบาลและเงินฝากระยะสั้น ความเสี่ยงต่ำมาก (ระดับ 1) ขายคืนได้เงินใน 1 วันทำการ (T+1) และผลตอบแทนไม่ต้องเสียภาษี
+                        </li>
+                        <li class="p-4 bg-white border border-amber-200 rounded-xl">
+                            <strong class="text-orange-700 font-heading">3. กองทุนรวมตราสารหนี้ระยะสั้น:</strong> ความเสี่ยงต่ำ (ระดับ 4) ผลตอบแทนสูงกว่าตลาดเงินเล็กน้อย ขายคืนได้เงินใน 1-2 วันทำการ เหมาะสำหรับเก็บเงินฉุกเฉินส่วนที่เกิน 3 เดือนขึ้นไป
+                        </li>
+                        <li class="p-4 bg-white border border-amber-200 rounded-xl">
+                            <strong class="text-orange-700 font-heading">4. สลากออมทรัพย์ (ออมสิน / ธ.ก.ส. / ธอส.):</strong> เงินต้นอยู่ครบ ได้ลุ้นรางวัลทุกเดือน แต่ควรเลือกแบบที่อายุไม่นานเกินไป (เช่น 1-2 ปี) และสามารถเวนคืนได้เมื่อจำเป็น
+                        </li>
+                    </ul>
+                `
+            },
+            {
+                id: 5,
+                category: 'saving',
+                catName: 'การออม & ประกันความเสี่ยง',
+                catColor: 'amber',
+                readTime: '6 นาที',
+                title: 'คัมภีร์เลือกซื้อประกันชีวิตและประกันสุขภาพ ไม่ให้จ่ายเบี้ยทิ้งเกินจำเป็น',
+                summary: 'ทำความเข้าใจความแตกต่างของประกันแต่ละประเภท วิธีคำนวณทุนประกันที่เหมาะสม และการอ่านเงื่อนไขสำคัญ',
+                content: `
+                    <p>ประกันไม่ใช่การลงทุนที่เน้นกำไรสูงสุด แต่คือ <strong>"เครื่องมือบริหารความเสี่ยง"</strong> เพื่อไม่ให้เหตุการณ์ไม่คาดฝันมาทำลายแผนการเงินของคุณ</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">1. ประกันชีวิต (Life Insurance)</h3>
+                    <p>เหมาะสำหรับ <strong>"เสาหลักของครอบครัว"</strong> หรือคนที่มีคนข้างหลังต้องดูแล (พ่อแม่ ลูก คู่สมรส) หากเกิดเหตุไม่คาดฝัน เงินทุนประกันจะช่วยดูแลครอบครัวต่อได้ ทุนประกันที่เหมาะสมควรครอบคลุมหนี้สินทั้งหมด + ค่าใช้จ่ายของครอบครัวอย่างน้อย 3-5 ปี</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">2. ประกันสุขภาพ (Health Insurance)</h3>
+                    <p>ค่ารักษาพยาบาลในโรงพยาบาลเอกชนมีอัตราเงินเฟ้อสูงถึง 6-8% ต่อปี การเลือกประกันสุขภาพแบบ <strong>เหมาจ่าย (Lump Sum)</strong> จะช่วยอุดช่องโหว่เรื่องค่าห้อง ค่าผ่าตัด และค่ายาได้ดีกว่าแบบแยกค่าใช้จ่าย</p>
+                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 text-amber-900 text-base">
+                        <strong>ข้อควรระวัง:</strong> ต้องแถลงประวัติสุขภาพตามความเป็นจริงทุกครั้ง (ห้ามปกปิดโรคที่เป็นมาก่อน) และเบี้ยประกันรวมทั้งหมดไม่ควรเกิน 10% - 15% ของรายได้ทั้งปี เพื่อไม่ให้กระทบสภาพคล่อง
+                    </div>
+                `
+            },
+            {
+                id: 6,
+                category: 'debt',
+                catName: 'การบริหารจัดการหนี้สิน',
+                catColor: 'rose',
+                readTime: '5 นาที',
+                title: 'แยกให้ออก: "หนี้ดี" vs "หนี้เสีย" และเพดานหนี้ที่ปลอดภัย (DSR)',
+                summary: 'ทำไมการเป็นหนี้ถึงทำให้บางคนรวยขึ้น ในขณะที่บางคนจมอยู่กับวงจรดอกเบี้ยไม่รู้จบ',
+                content: `
+                    <p>การมีหนี้ไม่ใช่เรื่องผิด แต่การก่อหนี้เกินตัวโดยไม่เข้าใจธรรมชาติของดอกเบี้ยคือจุดเริ่มต้นของวิกฤตการเงิน</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                            <h4 class="font-heading font-bold text-emerald-900 mb-1">✅ หนี้ดี (Good Debt)</h4>
+                            <p class="text-sm text-emerald-800">หนี้ที่ก่อให้เกิดรายได้ในอนาคต เพิ่มศักยภาพการทำงาน หรือเป็นทรัพย์สินที่มูลค่าเพิ่มขึ้น เช่น สินเชื่อเพื่อธุรกิจ สินเชื่อเพื่อการศึกษา หรือสินเชื่อที่อยู่อาศัยที่ผ่อนไหว</p>
+                        </div>
+                        <div class="bg-rose-50 p-4 rounded-xl border border-rose-200">
+                            <h4 class="font-heading font-bold text-rose-900 mb-1">❌ หนี้เสีย / หนี้จน (Bad Debt)</h4>
+                            <p class="text-sm text-rose-800">หนี้ที่เกิดจากการบริโภคฟุ่มเฟือย มูลค่าลดลงทันทีที่ซื้อ และมีอัตราดอกเบี้ยสูง เช่น การผ่อนสินค้าฟุ่มเฟือย หนี้บัตรเครดิตที่จ่ายขั้นต่ำ และบัตรกดเงินสด</p>
+                        </div>
+                    </div>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">เกณฑ์วัดภาระหนี้ที่ปลอดภัย (Debt Service Ratio - DSR)</h3>
+                    <p>ยอดผ่อนชำระหนี้รวมทุกก้อนต่อเดือน <strong>ไม่ควรเกิน 35% - 40% ของรายได้สุทธิต่อเดือน</strong> เช่น หากเงินเดือน 30,000 บาท ยอดผ่อนบ้าน ผ่อนรถ และผ่อนของรวมกันไม่ควรเกิน 10,500 - 12,000 บาทต่อเดือน</p>
+                `
+            },
+            {
+                id: 7,
+                category: 'debt',
+                catName: 'การบริหารจัดการหนี้สิน',
+                catColor: 'rose',
+                readTime: '6 นาที',
+                title: 'กลยุทธ์ปลดหนี้ Snowball vs Avalanche เลือกวิธีไหนให้หลุดพ้นไวที่สุด',
+                summary: 'เปรียบเทียบ 2 เทคนิคการปิดหนี้หลายก้อนพร้อมกัน พร้อมวิธีเจรจาปรับโครงสร้างหนี้และการรีไฟแนนซ์',
+                content: `
+                    <p>เมื่อคุณมีหนี้หลายก้อน (เช่น บัตรเครดิต 3 ใบ + สินเชื่อส่วนบุคคล 1 ก้อน) การจ่ายกระจายๆ เท่ากันทุกใบจะทำให้หนี้หมดช้ามาก ให้เลือกใช้ 1 ใน 2 กลยุทธ์นี้:</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">1. วิธี Avalanche (เน้นประหยัดดอกเบี้ยสูงสุด)</h3>
+                    <p>เรียงลำดับหนี้จาก <strong>"อัตราดอกเบี้ยแพงที่สุด ไป ถูกที่สุด"</strong> ให้จ่ายขั้นต่ำทุกก้อน แล้วนำเงินก้อนที่เหลือทั้งหมดทุ่มโปะไปที่ก้อนที่ดอกเบี้ยแพงที่สุดก่อน เมื่อก้อนแรกหมด ค่อยนำเงินทั้งหมดไปโปะก้อนที่ดอกเบี้ยรองลงมา วิธีนี้ประหยัดเงินได้มากที่สุดในทางคณิตศาสตร์</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">2. วิธี Snowball (เน้นสร้างกำลังใจทางจิตวิทยา)</h3>
+                    <p>เรียงลำดับหนี้จาก <strong>"ยอดหนี้คงเหลือน้อยที่สุด ไป มากที่สุด"</strong> โดยไม่สนดอกเบี้ย จ่ายขั้นต่ำทุกก้อน แล้วทุ่มโปะก้อนที่ยอดน้อยที่สุดให้จบเร็วๆ เพื่อลดจำนวนเจ้าหนี้และสร้างกำลังใจในการสู้ต่อ</p>
+                    <div class="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                        <strong>ตัวช่วยเพิ่มเติม:</strong> หากมีหนี้บ้าน ควรทำเรื่อง <strong>รีไฟแนนซ์ (Refinance)</strong> หรือขอลดดอกเบี้ยกับธนาคารเดิม (Retention) ทุกๆ 3 ปี จะช่วยประหยัดดอกเบี้ยได้หลักแสนบาท
+                    </div>
+                `
+            },
+            {
+                id: 8,
+                category: 'invest',
+                catName: 'การลงทุน & เกษียณ',
+                catColor: 'sky',
+                readTime: '7 นาที',
+                title: 'รู้จักสินทรัพย์การลงทุน 5 ประเภทหลัก และพีระมิดความเสี่ยง',
+                summary: 'ปูพื้นฐานก่อนเข้าตลาดทุน ทำความเข้าใจเงินฝาก ตราสารหนี้ กองทุนรวม หุ้น และสินทรัพย์ทางเลือก',
+                content: `
+                    <p>กฎเหล็กข้อแรกของการลงทุนคือ <strong>"High Risk, High Expected Return"</strong> (ความเสี่ยงสูง ผลตอบแทนคาดหวังสูง) และ <strong>"จงลงทุนในสิ่งที่เข้าใจเท่านั้น"</strong></p>
+                    <ul class="space-y-3">
+                        <li><strong>1. เงินฝากและตราสารตลาดเงิน (ความเสี่ยงต่ำมาก):</strong> ผลตอบแทน 1-2% ต่อปี เงินต้นปลอดภัยสูง</li>
+                        <li><strong>2. ตราสารหนี้ / พันธบัตร / หุ้นกู้ (ความเสี่ยงต่ำ-ปานกลาง):</strong> เราอยู่ในฐานะ "เจ้าหนี้" ของรัฐบาลหรือบริษัทเอกชน ได้รับดอกเบี้ยสม่ำเสมอตามกำหนด (ผลตอบแทน 2-5% ต่อปี) ต้องระวังความเสี่ยงจากการผิดนัดชำระหนี้ (Default Risk) ในหุ้นกู้เอกชน</li>
+                        <li><strong>3. กองทุนรวม (Mutual Funds):</strong> การระดมเงินจากนักลงทุนรายย่อย โดยมีผู้จัดการกองทุนมืออาชีพบริหารให้ เหมาะสำหรับผู้เริ่มต้นเพราะใช้เงินน้อยและกระจายความเสี่ยงได้ดี</li>
+                        <li><strong>4. หุ้นสามัญ (Equities - ความเสี่ยงสูง):</strong> เราอยู่ในฐานะ "เจ้าของกิจการ" ผลตอบแทนมาจากส่วนต่างราคา (Capital Gain) และเงินปันผล (Dividend) ระยะยาวให้ผลตอบแทนเฉลี่ย 7-10% ต่อปี แต่ระยะสั้นผันผวนสูง</li>
+                        <li><strong>5. สินทรัพย์ทางเลือก (Alternative Assets):</strong> เช่น ทองคำ อสังหาริมทรัพย์ (REITs) หรือสินทรัพย์ดิจิทัล ใช้เพื่อกระจายความเสี่ยงของพอร์ตโดยรวม</li>
+                    </ul>
+                `
+            },
+            {
+                id: 9,
+                category: 'invest',
+                catName: 'การลงทุน & เกษียณ',
+                catColor: 'sky',
+                readTime: '6 นาที',
+                title: 'กลยุทธ์ DCA (Dollar-Cost Averaging) และพลังมหัศจรรย์ของดอกเบี้ยทบต้น',
+                summary: 'ทำไมคนธรรมดาที่ไม่มีเวลาเฝ้าหน้าจอหุ้น ถึงสามารถสร้างพอร์ตหลักล้านได้ด้วยการลงทุนสม่ำเสมอทุกเดือน',
+                content: `
+                    <p><strong>DCA (Dollar-Cost Averaging)</strong> คือการทยอยลงทุนด้วยจำนวนเงินที่เท่าๆ กันทุกงวด (เช่น ทุกวันที่ 1 ของเดือน เดือนละ 3,000 บาท) โดยไม่สนใจว่าราคาสินทรัพย์ในวันนั้นจะขึ้นหรือลง</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">ข้อดีของการลงทุนแบบ DCA</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>ตัดอารมณ์ความโลภและความกลัวในการจับจังหวะตลาด (Market Timing)</li>
+                        <li>ช่วงที่ตลาดหุ้นตก เงินจำนวนเท่าเดิมจะซื้อหน่วยลงทุนได้มากขึ้น (ได้ของถูก)</li>
+                        <li>สร้างวินัยการออมและการลงทุนอัตโนมัติ</li>
+                    </ul>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 pt-2">พลังของดอกเบี้ยทบต้น (Compound Interest)</h3>
+                    <p>อัลเบิร์ต ไอน์สไตน์ เรียกดอกเบี้ยทบต้นว่าเป็น <em>"สิ่งมหัศจรรย์อันดับ 8 ของโลก"</em> เพราะผลตอบแทนที่คุณได้รับในแต่ละปี จะถูกนำไปทบกับเงินต้นเพื่อสร้างผลตอบแทนต่อในปีถัดไป ยิ่งคุณเริ่มต้นลงทุนเร็วเท่าไหร่ เวลาจะเป็นตัวทวีคูณเงินของคุณให้เติบโตแบบก้าวกระโดด</p>
+                `
+            },
+            {
+                id: 10,
+                category: 'tax',
+                catName: 'ภาษี & กฎหมายการเงิน',
+                catColor: 'purple',
+                readTime: '6 นาที',
+                title: 'สรุปภาษีเงินได้บุคคลธรรมดา และรายการลดหย่อนภาษีที่มนุษย์เงินเดือนต้องรู้',
+                summary: 'เปลี่ยนรายจ่ายภาษีให้กลายเป็นเงินออมและเงินลงทุน ด้วยการใช้สิทธิ์ลดหย่อนอย่างถูกต้องตามกฎหมาย',
+                content: `
+                    <p>การยื่นภาษีเป็นหน้าที่ของคนมีรายได้ทุกคน (แม้รายได้ไม่ถึงเกณฑ์เสียภาษี ก็ควรยื่นแบบแสดงรายการเพื่อรักษาสิทธิ์)</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">สูตรคำนวณเงินได้สุทธิ</h3>
+                    <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-purple-900 font-heading font-semibold text-center">
+                        เงินได้สุทธิ = รายได้ทั้งปี - ค่าใช้จ่าย - ค่าลดหย่อน
+                    </div>
+                    <p>หากเงินได้สุทธิไม่เกิน 150,000 บาทแรก จะได้รับการยกเว้นภาษี แต่หากเกินจะเสียภาษีแบบขั้นบันไดตั้งแต่ 5% ไปจนถึง 35%</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">กลุ่มค่าลดหย่อนยอดนิยมเพื่อการออมและการลงทุน</h3>
+                    <ul class="list-disc list-inside space-y-1.5">
+                        <li><strong>ค่าลดหย่อนส่วนตัว:</strong> 60,000 บาท (ได้ทุกคน) และประกันสังคมตามจ่ายจริง</li>
+                        <li><strong>กลุ่มประกัน:</strong> ประกันชีวิตทั่วไป (สูงสุด 100,000 บาท), ประกันสุขภาพตนเอง (สูงสุด 25,000 บาท รวมกับประกันชีวิตต้องไม่เกิน 100,000 บาท)</li>
+                        <li><strong>กลุ่มกองทุนเพื่อการเกษียณ:</strong> กองทุนรวมเพื่อการเลี้ยงชีพ (RMF), กองทุนสำรองเลี้ยงชีพ (PVD) และประกันบำนาญ (รวมกันสูงสุดไม่เกิน 500,000 บาท)</li>
+                        <li><strong>กองทุนรวมไทยเพื่อความยั่งยืน (ThaiESG):</strong> ลดหย่อนได้ตามเงื่อนไขที่ภาครัฐกำหนด เพื่อส่งเสริมการลงทุนในธุรกิจยั่งยืน</li>
+                    </ul>
+                `
+            },
+            {
+                id: 11,
+                category: 'mindset',
+                catName: 'จิตวิทยาการเงิน & ภัยไซเบอร์',
+                catColor: 'orange',
+                readTime: '5 นาที',
+                title: 'กับดักทางจิตวิทยาการเงิน: Lifestyle Inflation และ FOMO ที่ทำให้เก็บเงินไม่อยู่',
+                summary: 'ทำไมเงินเดือนขึ้นทีไร เงินเก็บก็ไม่เคยเพิ่มขึ้นตาม? มาทำความเข้าใจอคติทางความคิดที่หลอกให้เราใช้เงิน',
+                content: `
+                    <p>ปัญหาการเงินกว่า 80% ไม่ได้เกิดจากความไม่รู้เลข แต่เกิดจาก <strong>"พฤติกรรมและอารมณ์"</strong> ของตัวเราเอง</p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">1. Lifestyle Inflation (ภาวะเงินเฟ้อในการใช้ชีวิต)</h3>
+                    <p>คืออาการที่เมื่อรายได้เพิ่มขึ้น เราจึงอัปเกรดมาตรฐานการใช้ชีวิตตามทันที เช่น เปลี่ยนมือถือรุ่นใหม่ ซื้อรถหรูขึ้น กินอาหารแพงขึ้น ทำให้สัดส่วนเงินออมเท่าเดิมหรือลดลง วิธีแก้คือ <strong>"ทุกครั้งที่เงินเดือนขึ้น ให้แบ่งอย่างน้อย 50% ของส่วนที่เพิ่มไปเก็บออมก่อน"</strong></p>
+                    <h3 class="font-heading text-xl font-bold text-slate-900">2. FOMO (Fear Of Missing Out - กลัวตกขบวน)</h3>
+                    <p>การเห็นเพื่อนในโซเชียลมีเดียไปเที่ยวต่างประเทศ ใช้ของแบรนด์เนม หรืออวดกำไรจากการเก็งกำไร ทำให้เรารู้สึกอยากมีอยากได้ตาม ทั้งที่สถานะการเงินต่างกัน วิธีแก้คือหยุดเปรียบเทียบเบื้องหลังของเรากับเบื้องหน้าของคนอื่น และตั้งเป้าหมายการเงินในแบบของตัวเอง</p>
+                `
+            },
+            {
+                id: 12,
+                category: 'mindset',
+                catName: 'จิตวิทยาการเงิน & ภัยไซเบอร์',
+                catColor: 'orange',
+                readTime: '4 นาที',
+                title: 'รู้ทันกลโกงการเงินยุคใหม่: แชร์ลูกโซ่ แอปดูดเงิน และมิจฉาชีพออนไลน์',
+                summary: 'เช็กลิสต์สัญญาณอันตรายของมิจฉาชีพทางการเงิน ปกป้องเงินเก็บทั้งชีวิตของคุณไม่ให้ตกเป็นเหยื่อ',
+                content: `
+                    <p>ปัจจุบันภัยทางการเงินมาในรูปแบบที่แนบเนียนมากขึ้น การมีภูมิคุ้มกันความรู้จะช่วยให้คุณรอดพ้นจากความสูญเสียได้</p>
+                    <div class="bg-rose-50 border border-rose-200 p-5 rounded-2xl space-y-2 text-rose-900">
+                        <h4 class="font-heading font-bold text-lg">🚨 5 สัญญาณเตือน "แชร์ลูกโซ่ / หลอกลงทุน"</h4>
+                        <ol class="list-decimal list-inside space-y-1 text-base">
+                            <li><strong>การันตีผลตอบแทนสูงเกินจริง:</strong> เช่น อ้างว่าได้กำไร 10% ต่อเดือน หรือ 100% ต่อปี (ในโลกความจริงไม่มีการลงทุนที่ถูกกฎหมายใดการันตีผลตอบแทนสูงขนาดนี้)</li>
+                            <li><strong>เน้นชวนคนมาสมัครต่อ:</strong> รายได้หลักมาจากการหาสมาชิกใหม่ ไม่ใช่จากธุรกิจจริง</li>
+                            <li><strong>เร่งรัดให้ตัดสินใจ:</strong> อ้างว่าโปรโมชันใกล้หมด หรือโควตาเต็ม เพื่อไม่ให้คุณมีเวลาตรวจสอบ</li>
+                            <li><strong>แอบอ้างชื่อคนดังหรือหน่วยงานรัฐ:</strong> นำภาพผู้บริหารหรือโลโก้ ก.ล.ต. / ตลาดหลักทรัพย์ฯ มาตัดต่อสร้างความน่าเชื่อถือ</li>
+                            <li><strong>โอนเงินเข้าบัญชีบุคคลธรรมดา:</strong> ไม่ใช่บัญชีบริษัทหรือบัญชีซื้อขายหลักทรัพย์ที่ได้รับอนุญาต</li>
+                        </ol>
+                    </div>
+                    <p><strong>กฎเหล็กความปลอดภัย:</strong> ห้ามกดลิงก์จาก SMS แปลกปลอม, ห้ามติดตั้งแอปพลิเคชันนอก Store ทางการ, และห้ามบอกรหัส OTP หรือรหัสผ่านธนาคารแก่ผู้อื่นเด็ดขาด</p>
+                `
+            }
+        ];
+
+        // --- Financial Glossary Database ---
+        const glossaryDB = [
+            { term: "Inflation (เงินเฟ้อ)", desc: "ภาวะที่ระดับราคาสินค้าและบริการทั่วไปปรับตัวสูงขึ้นอย่างต่อเนื่อง ส่งผลให้อำนาจซื้อของเงินลดลง (เงิน 100 บาทเท่าเดิม แต่ซื้อของได้น้อยลง)" },
+            { term: "Liquidity (สภาพคล่อง)", desc: "ความสามารถในการเปลี่ยนสินทรัพย์ให้กลายเป็นเงินสดได้อย่างรวดเร็วโดยไม่สูญเสียมูลค่ามากนัก เช่น เงินฝากธนาคารมีสภาพคล่องสูงกว่าที่ดิน" },
+            { term: "DCA (Dollar-Cost Averaging)", desc: "กลยุทธ์การทยอยลงทุนอย่างสม่ำเสมอด้วยจำนวนเงินที่เท่ากันทุกงวด โดยไม่คำนึงถึงราคาสินทรัพย์ในขณะนั้น เพื่อถัวเฉลี่ยต้นทุนและลดความเสี่ยงจากความผันผวน" },
+            { term: "Asset Allocation (การจัดพอร์ตลงทุน)", desc: "การกระจายเงินลงทุนไปยังสินทรัพย์หลากหลายประเภท (เช่น หุ้น ตราสารหนี้ ทองคำ) เพื่อลดความเสี่ยงโดยรวมของพอร์ตให้เหมาะสมกับเป้าหมาย" },
+            { term: "DSR (Debt Service Ratio)", desc: "อัตราส่วนภาระหนี้สินต่อรายได้ต่อเดือน คำนวณจาก (ยอดผ่อนหนี้ทั้งหมดต่อเดือน ÷ รายได้ต่อเดือน) × 100 เกณฑ์มาตรฐานไม่ควรเกิน 40%" },
+            { term: "Compound Interest (ดอกเบี้ยทบต้น)", desc: "การนำดอกเบี้ยหรือผลตอบแทนที่ได้รับในแต่ละงวด กลับไปรวมเป็นเงินต้นเพื่อนำไปคำนวณดอกเบี้ยในงวดถัดไป ทำให้เงินเติบโตแบบทวีคูณ" },
+            { term: "Capital Gain (กำไรจากส่วนต่างราคา)", desc: "กำไรที่เกิดจากการขายสินทรัพย์ได้ในราคาที่สูงกว่าราคาที่ซื้อมา เช่น ซื้อหุ้นราคา 10 บาท และขายไปในราคา 15 บาท" },
+            { term: "Dividend (เงินปันผล)", desc: "ส่วนแบ่งผลกำไรที่บริษัทหรือกองทุนรวมจ่ายคืนให้แก่ผู้ถือหุ้นหรือผู้ถือหน่วยลงทุนตามสัดส่วนที่ถือครอง" },
+            { term: "Credit Bureau (เครดิตบูโร)", desc: "บริษัทข้อมูลเครดิตแห่งชาติ ทำหน้าที่รวบรวมประวัติการขอสินเชื่อและการชำระหนี้ของบุคคลและนิติบุคคล เพื่อใช้ประกอบการพิจารณาสินเชื่อของสถาบันการเงิน" },
+            { term: "Passive Income (รายได้แบบไม่ต้องออกแรงตลอดเวลา)", desc: "กระแสรายได้ที่ไหลเข้ามาอย่างต่อเนื่องโดยไม่ต้องใช้เวลาทำงานแลกตลอดเวลา เช่น ค่าเช่าอสังหาริมทรัพย์ เงินปันผลหุ้น หรือค่าลิขสิทธิ์" }
+        ];
+
+        // --- App State ---
+        let selectedCategory = 'all';
+        let searchQuery = '';
+        let bookmarkedIds = JSON.parse(localStorage.getItem('finlit_bookmarks')) || [1];
+        let currentArticleId = null;
+
+        // --- Initialization ---
+        window.onload = function() {
+            document.getElementById('total-count').innerText = articlesDB.length;
+            updateBookmarkCount();
+            renderArticles();
+            renderGlossary();
+        };
+
+        // --- View Switching ---
+        function switchView(viewName) {
+            ['articles', 'glossary', 'bookmarks'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${v}`);
+                navBtn.classList.remove('bg-orange-100', 'text-orange-800', 'font-semibold');
+                navBtn.classList.add('text-stone-600', 'hover:bg-amber-50', 'font-medium');
+            });
+
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${viewName}`);
+            activeBtn.classList.remove('text-stone-600', 'hover:bg-amber-50', 'font-medium');
+            activeBtn.classList.add('bg-orange-100', 'text-orange-800', 'font-semibold');
+
+            if (viewName === 'bookmarks') {
+                renderBookmarks();
+            }
+        }
+
+        // --- Category & Search Filtering ---
+        function selectCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-semibold bg-orange-600 text-white shadow-sm transition-all";
+                } else {
+                    btn.className = "cat-btn font-heading shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-white text-stone-700 border border-amber-200 hover:bg-amber-50 transition-all";
+                }
+            });
+
+            // Hide featured banner if filtering
+            const banner = document.getElementById('featured-banner');
+            if (cat === 'all' && searchQuery === '') {
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
+
+            renderArticles();
+        }
+
+        function filterArticles() {
+            searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clear-search');
+            const banner = document.getElementById('featured-banner');
+
+            if (searchQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+                banner.classList.add('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+                if (selectedCategory === 'all') banner.classList.remove('hidden');
+            }
+
+            // Ensure we are on articles view when searching
+            if (document.getElementById('view-articles').classList.contains('hidden')) {
+                switchView('articles');
+            }
+
+            renderArticles();
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            filterArticles();
+        }
+
+        // --- Render Article Cards ---
+        function renderArticles() {
+            const grid = document.getElementById('articles-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            const filtered = articlesDB.filter(art => {
+                const matchCat = selectedCategory === 'all' || art.category === selectedCategory;
+                const matchQuery = searchQuery === '' || 
+                                   art.title.toLowerCase().includes(searchQuery) || 
+                                   art.summary.toLowerCase().includes(searchQuery) ||
+                                   art.catName.toLowerCase().includes(searchQuery);
+                return matchCat && matchQuery;
+            });
+
+            document.getElementById('showing-count').innerText = `แสดง ${filtered.length} บทความ`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(art => createArticleCardHTML(art)).join('');
+        }
+
+        function createArticleCardHTML(art) {
+            const badgeColors = {
+                emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                amber: 'bg-amber-50 text-amber-700 border-amber-200',
+                rose: 'bg-rose-50 text-rose-700 border-rose-200',
+                sky: 'bg-sky-50 text-sky-700 border-sky-200',
+                purple: 'bg-purple-50 text-purple-700 border-purple-200',
+                orange: 'bg-orange-50 text-orange-700 border-orange-200'
+            };
+            const isBookmarked = bookmarkedIds.includes(art.id);
+
+            return `
+                <article class="bg-white rounded-2xl p-6 border border-amber-200/80 shadow-sm hover:shadow-md hover:border-orange-400 transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <span class="font-heading text-xs font-semibold px-2.5 py-1 rounded-lg border ${badgeColors[art.catColor]}">
+                                ${art.catName}
+                            </span>
+                            <button onclick="toggleBookmark(${art.id}, event)" title="บันทึกไว้อ่าน" class="w-8 h-8 rounded-lg flex items-center justify-center ${isBookmarked ? 'text-orange-600 bg-orange-100' : 'text-stone-400 hover:bg-amber-50'} transition-colors">
+                                <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <h3 onclick="openArticle(${art.id})" class="font-heading font-bold text-lg text-stone-900 group-hover:text-orange-700 transition-colors cursor-pointer leading-snug mb-2">
+                            ${art.title}
+                        </h3>
+                        <p class="text-stone-600 text-sm line-clamp-3 leading-relaxed mb-4">
+                            ${art.summary}
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-amber-100 flex justify-between items-center">
+                        <span class="text-xs text-stone-400"><i class="fa-regular fa-clock mr-1"></i>อ่าน ${art.readTime}</span>
+                        <button onclick="openArticle(${art.id})" class="font-heading text-sm font-semibold text-orange-600 hover:text-amber-800 flex items-center">
+                            อ่านบทความ <i class="fa-solid fa-arrow-right ml-1.5 text-xs transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </article>
+            `;
+        }
+
+        // --- Bookmarks Logic ---
+        function toggleBookmark(id, event) {
+            if (event) event.stopPropagation();
+            if (bookmarkedIds.includes(id)) {
+                bookmarkedIds = bookmarkedIds.filter(item => item !== id);
+            } else {
+                bookmarkedIds.push(id);
+            }
+            localStorage.setItem('finlit_bookmarks', JSON.stringify(bookmarkedIds));
+            updateBookmarkCount();
+            renderArticles();
+            if (!document.getElementById('view-bookmarks').classList.contains('hidden')) {
+                renderBookmarks();
+            }
+            if (currentArticleId === id) {
+                updateReaderBookmarkBtn();
+            }
+        }
+
+        function toggleCurrentBookmark() {
+            if (currentArticleId) {
+                toggleBookmark(currentArticleId);
+            }
+        }
+
+        function updateBookmarkCount() {
+            document.getElementById('bookmark-count').innerText = bookmarkedIds.length;
+        }
+
+        function renderBookmarks() {
+            const grid = document.getElementById('bookmarks-grid');
+            const empty = document.getElementById('empty-bookmarks');
+            const savedArticles = articlesDB.filter(art => bookmarkedIds.includes(art.id));
+
+            if (savedArticles.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+            } else {
+                empty.classList.add('hidden');
+                grid.innerHTML = savedArticles.map(art => createArticleCardHTML(art)).join('');
+            }
+        }
+
+        // --- Render Glossary ---
+        function renderGlossary() {
+            const container = document.getElementById('glossary-list');
+            container.innerHTML = glossaryDB.map(item => `
+                <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200 hover:border-orange-400 transition-colors">
+                    <h4 class="font-heading font-bold text-amber-900 text-base mb-1">🦕 ${item.term}</h4>
+                    <p class="text-stone-600 text-sm leading-relaxed">${item.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // --- Reader Modal Logic ---
+        function openArticle(id) {
+            const article = articlesDB.find(a => a.id === id);
+            if (!article) return;
+
+            currentArticleId = id;
+            document.getElementById('reader-category').innerText = article.catName;
+            document.getElementById('reader-time').innerHTML = `<i class="fa-regular fa-clock mr-1"></i>อ่าน ${article.readTime}`;
+            document.getElementById('reader-title').innerText = article.title;
+            document.getElementById('reader-subtitle').innerText = article.summary;
+            document.getElementById('reader-body').innerHTML = article.content;
+
+            updateReaderBookmarkBtn();
+
+            const modal = document.getElementById('reader-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        function updateReaderBookmarkBtn() {
+            const btn = document.getElementById('reader-bookmark-btn');
+            const isBookmarked = bookmarkedIds.includes(currentArticleId);
+            if (isBookmarked) {
+                btn.innerHTML = '<i class="fa-solid fa-bookmark text-orange-600 mr-1"></i> บันทึกแล้ว';
+                btn.className = "px-3 py-1.5 rounded-xl text-sm font-heading font-semibold border border-orange-300 bg-orange-100 text-orange-900 transition-colors";
+            } else {
+                btn.innerHTML = '<i class="fa-regular fa-bookmark mr-1"></i> บันทึกไว้อ่าน';
+                btn.className = "px-3 py-1.5 rounded-xl text-sm font-heading font-medium border border-amber-300 hover:bg-amber-100 text-stone-700 transition-colors";
+            }
+        }
+
+        function navigateArticle(direction) {
+            const currentIndex = articlesDB.findIndex(a => a.id === currentArticleId);
+            if (currentIndex === -1) return;
+            
+            let nextIndex = currentIndex + direction;
+            if (nextIndex < 0) nextIndex = articlesDB.length - 1;
+            if (nextIndex >= articlesDB.length) nextIndex = 0;
+
+            openArticle(articlesDB[nextIndex].id);
+        }
+
+        function closeReader() {
+            document.getElementById('reader-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
